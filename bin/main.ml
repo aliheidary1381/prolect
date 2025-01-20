@@ -30,7 +30,7 @@ let parseArgs () =
       None -> err "You must specify an input file"
     | Some(s) -> s
 
-let openfile infile = 
+let openfile (infile: string) = 
   let rec trynext l = match l with
         [] -> err ("Could not find " ^ infile)
       | (d::rest) -> 
@@ -39,7 +39,7 @@ let openfile infile =
             with Sys_error _ -> trynext rest
   in trynext !searchpath
 
-let parseFile inFile =
+let parseFile (inFile: string) =
   let pi = openfile inFile
   in let lexbuf = Lexer.create inFile pi
   in let result =
@@ -57,7 +57,7 @@ let rec read_til_dot ?(prompt = "?- ") () =
     else
       line ^ (read_til_dot ~prompt: "|    " ())
 
-let parseString str =
+let parseString (str: string) =
   let lexbuf = Lexer.createFromStr str
   in let result =
     try Parser.query Lexer.main lexbuf with Parsing.Parse_error -> 
@@ -68,18 +68,18 @@ in
 let alreadyImported = ref ([] : string list)
 let db = ref ([]: program)
 
-let process_file f  =   
+let process_file (f: string)  =   
   if not @@ List.mem f (!alreadyImported) then
     alreadyImported := f :: !alreadyImported;
     db := (parseFile f) @ !db
 
-let process_db db q =  
+let process_db (db: program) (q: query) =  
   open_hvbox 0;
   process_query db q;
   force_newline();
   print_flush()
 
-let rec toplevel f =
+let rec toplevel () =
   try (
     let text = "?- " ^ read_til_dot() in
     let q = parseString text in

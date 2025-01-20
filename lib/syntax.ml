@@ -29,7 +29,7 @@ type fact = term (* definitley Predicate, because of parsing rules *)
 
 type rule = (term * goal)  (* also definitley Predicate *)
 
-type clause = 
+type clause = (* or relation *)
     Rule of rule
   | Fact of fact
 
