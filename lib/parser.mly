@@ -118,20 +118,20 @@ clause:
 fact:
     predicate ENDCLAUSE 
       { let variables_index: immutable_index = SMap.empty in
-          let (pred, variables_index) = $1 variables_index in
+          let (pred, _) = $1 variables_index in
             Predicate(pred) }
 
 rule:
     predicate RULE goal ENDCLAUSE 
       { let variables_index: immutable_index = SMap.empty in
           let (p, variables_index) = $1 variables_index in
-            let (g, variables_index) = $3 variables_index in
+            let (g, _) = $3 variables_index in
               (Predicate(p), g) }
 
 query:
     QUERY goal ENDCLAUSE 
       { let variables_index: immutable_index = SMap.empty in
-          let (g, variables_index) = $2 variables_index in
+          let (g, _) = $2 variables_index in
             g }
 
 goal:

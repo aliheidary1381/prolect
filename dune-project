@@ -13,6 +13,6 @@
  (description
 "A pretty basic interpreter for prolog with no support for 
 integers, lists or anything other than pure logic")
- (depends ocaml dune)
+ (depends ocaml dune linenoise)
  (tags
   (prolog interpreter)))

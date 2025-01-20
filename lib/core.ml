@@ -1,8 +1,6 @@
 open Syntax
 open Format
-open Unix
 open Support.Pervasive
-open Support.Error
 
 (* ------------------------   EVALUATION  ------------------------ *)
 
@@ -112,10 +110,10 @@ let rec print_ground_term: term -> unit = function
   | Predicate({atom=(_, str, _); args}) ->
       pr str;
       pr "(";
-      let print_args = function
+      let rec print_args = function
         | [] -> ()
         | term::[] -> obox (); print_ground_term term; cbox ()
-        | term::ls -> obox (); print_ground_term term; cbox (); pr ", "
+        | term::ls -> obox (); print_ground_term term; cbox (); pr ", "; print_args ls
       in
       print_args args;
       pr ")"
@@ -155,8 +153,7 @@ let rec print_sub_list (ls': solution_set) = match Seq.uncons ls' with
   | Some(sub, ls) when Seq.is_empty ls ->
       print_sub @@ IntMap.to_list sub;
       pr ".";
-      print_newline();
-      print_endline ""
+      print_newline()
   | Some(sub, ls) ->
       print_sub @@ IntMap.to_list sub;
       print_flush();
@@ -165,12 +162,11 @@ let rec print_sub_list (ls': solution_set) = match Seq.uncons ls' with
             print_newline();
             print_sub_list ls
         | _   -> 
-            print_endline "\b.";
-            print_endline ""
+            print_endline "\b."
 
 let print_sub_list (ls: solution_set) = match Seq.uncons ls with
   | None -> print_endline "false ."
-  | Some(x, ls') when x = empty_sub -> print_endline "true ."
+  | Some(x, _) when x = empty_sub -> print_endline "true ."
   | _ -> print_sub_list ls
 
 let process_query (db: program) (q: query) =

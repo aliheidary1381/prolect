@@ -49,13 +49,14 @@ in
   Parsing.clear_parser(); close_in pi; result
 
 let rec read_til_dot ?(prompt = "?- ") () = 
-  print_string prompt;
-  print_flush();
-  let line = read_line() in
-    if contains line '.' then
-      line
-    else
-      line ^ (read_til_dot ~prompt: "|    " ())
+  let line =
+    match LNoise.linenoise prompt with
+      None -> ""
+    | Some l -> l in
+  if contains line '.' then
+    line
+  else
+    line ^ " " ^ (read_til_dot ~prompt: "|    " ())
 
 let parseString (str: string) =
   let lexbuf = Lexer.createFromStr str
@@ -81,13 +82,13 @@ let process_db (db: program) (q: query) =
 
 let rec toplevel () =
   try (
-    let text = "?- " ^ read_til_dot() in
-    let q = parseString text in
+    let text = read_til_dot() in
+    LNoise.history_add text |> ignore;
+    LNoise.history_save ~filename:"history.txt" |> ignore;
+    let q = parseString ("?- " ^ text) in
       process_db !db q;
       toplevel ()
-  ) with End_of_file ->
-    print_endline "";
-    print_endline "exit"; 0
+  ) with Stdlib.Sys.Break -> 0
 
 
 let main () = 
@@ -95,6 +96,9 @@ let main () =
   process_file inFile;
   print_endline "Welcome to Prolect (version 1.0.0)";
   print_endline "";
+  LNoise.set_multiline true;
+  LNoise.history_load ~filename:"history.txt" |> ignore;
+  LNoise.history_set ~max_length:100 |> ignore;
   toplevel ()
 
 let () = set_max_boxes 1000

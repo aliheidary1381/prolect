@@ -1,4 +1,4 @@
 (executable
  (public_name prolect)
  (name main)
- (libraries prolect))
+ (libraries prolect linenoise))
