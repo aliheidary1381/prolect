@@ -31,6 +31,6 @@ $
 ```
 
 ## Future plans
-* Improve documentation & error handling
+* Improve error handling
 * Add files importing facilities
 * Add term indexing
