@@ -16,3 +16,5 @@ integers, lists or anything other than pure logic")
  (depends ocaml dune linenoise)
  (tags
   (prolog interpreter)))
+
+(map_workspace_root false)

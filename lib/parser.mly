@@ -8,7 +8,6 @@ open Support.Error
 open Syntax
 
 (* Context management *)
-let first_free_index = ref 2 (* 0 & 1 are reserved for false & true *)
 
 type mutable_index = (string, int) Hashtbl.t
 let atoms_index: mutable_index = Hashtbl.create 1024

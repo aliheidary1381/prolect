@@ -5,11 +5,12 @@
 open Format
 open String
 open Prolect.Support.Error
-open Prolect.Syntax
 open Prolect.Core
 
 module Parser = Prolect.Parser
 module Lexer = Prolect.Lexer
+
+(* let _ = Printexc.record_backtrace true *)
 
 let searchpath = ref [""]
 
@@ -67,18 +68,12 @@ in
   Parsing.clear_parser(); result
  
 let alreadyImported = ref ([] : string list)
-let db = ref ([]: program)
 
 let process_file (f: string)  =   
   if not @@ List.mem f (!alreadyImported) then
     alreadyImported := f :: !alreadyImported;
-    db := (parseFile f) @ !db
-
-let process_db (db: program) (q: query) =  
-  open_hvbox 0;
-  process_query db q;
-  force_newline();
-  print_flush()
+    let db = parseFile f in
+    prog := db @ !prog
 
 let rec toplevel () =
   try (
@@ -86,7 +81,10 @@ let rec toplevel () =
     LNoise.history_add text |> ignore;
     LNoise.history_save ~filename:"history.txt" |> ignore;
     let q = parseString ("?- " ^ text) in
-      process_db !db q;
+    open_hvbox 0;
+    process_query q;
+    force_newline();
+    print_flush();
       toplevel ()
   ) with Stdlib.Sys.Break -> 0
 
@@ -94,7 +92,7 @@ let rec toplevel () =
 let main () = 
   let inFile = parseArgs() in
   process_file inFile;
-  print_endline "Welcome to Prolect (version 1.0.0)";
+  print_endline "Welcome to Prolect (version 1.1.1)";
   print_endline "";
   LNoise.set_multiline true;
   LNoise.history_load ~filename:"history.txt" |> ignore;
