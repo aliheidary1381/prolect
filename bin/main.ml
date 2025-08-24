@@ -19,18 +19,6 @@ let argDefs = [
       Arg.String (fun f -> searchpath := f::!searchpath),
       "Append a directory to the search path"]
 
-let parseArgs () =
-  let inFile = ref (None : string option) in
-  Arg.parse argDefs
-     (fun s ->
-       match !inFile with
-         Some(_) -> err "You must specify exactly one input file"
-       | None -> inFile := Some(s))
-     "";
-  match !inFile with
-      None -> err "You must specify an input file"
-    | Some(s) -> s
-
 let openfile (infile: string) = 
   let rec trynext l = match l with
         [] -> err ("Could not find " ^ infile)
@@ -90,9 +78,12 @@ let rec toplevel () =
 
 
 let main () = 
-  let inFile = parseArgs() in
-  process_file inFile;
-  print_endline "Welcome to Prolect (version 1.1.1)";
+  let inFiles = ref ([] : string list) in
+  Arg.parse argDefs (fun s -> inFiles := s::!inFiles) 
+{|prolect (Prolect) 1.1.2
+Usage: prolect files...|};
+  List.iter process_file !inFiles;
+  print_endline "Welcome to Prolect (version 1.1.2)";
   print_endline "";
   LNoise.set_multiline true;
   LNoise.history_load ~filename:"history.txt" |> ignore;

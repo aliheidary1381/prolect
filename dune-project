@@ -9,7 +9,7 @@
 
 (package
  (name prolect)
- (synopsis "pure prolog interpreter")
+ (synopsis "Pure prolog interpreter")
  (description
 "A pretty basic interpreter for prolog with no support for 
 integers, lists or anything other than pure logic")
