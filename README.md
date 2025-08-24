@@ -12,7 +12,22 @@ The core part of the interpreter is only ~100 LOC.
 
 ## Usage
 
+Install using the `opam` package manager:
+
+```shell
+opam install prolect
+```
+
+Then run it, potentially with a consulting file:
+
+```shell
+prolect test.pl
+```
+
 ### Linux
+
+If you don't want to use opam, download the `.exe` from GitHub releases,
+add the executable attribute (`chmod +x prolect.exe`), and then:
 
 ```shell
 ./prolect.exe
@@ -20,16 +35,17 @@ The core part of the interpreter is only ~100 LOC.
 
 ### Other OSes
 
-First, install the OCaml Runtime. Then:
+If you don't want to use opam, download the `.bc` from GitHub releases,
+install the OCaml Runtime, and then:
 
 ```shell
 ocamlrun prolect.bc
 ```
 
-### Compile it yourself
+#### Compile it yourself
 
-If you don't want to use the bytecode interpreter, you can compile the project yourself
-(e.g. for getting a performance boost).
+If you don't want to use the bytecode interpreter either, you can compile the project yourself
+(e.g. for getting a performance boost on other OSes).
 
 First, install the dependencies (`ocaml`, `dune`, etc.). Then:
 
@@ -57,7 +73,7 @@ Provided that you've given the test consulting file
 (i.e. running `prolect test.pl` instead of `prolect`):
 
 ```prolog
-Welcome to Prolect (version 1.1.1)
+Welcome to Prolect (version 1.1.2)
 
 ?- ancestor(terah, jacob).
 true .
