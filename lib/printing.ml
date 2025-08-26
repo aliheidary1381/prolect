@@ -39,7 +39,7 @@ let rec print_sub: (int*term) list -> unit = function
     print_space();
     print_sub ls
 
-[%%if os_type <> "win32"]
+[%%if os_type <> "Win32"]
 let read_char () =
   let termio = Unix.tcgetattr Unix.stdin in
   let () =
