@@ -5,3 +5,4 @@ lib/lexer.ml
 lib/lexer.mli
 history.txt
 prolect.opam
+prolect.install
