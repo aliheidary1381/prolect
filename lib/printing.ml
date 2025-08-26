@@ -39,6 +39,7 @@ let rec print_sub: (int*term) list -> unit = function
     print_space();
     print_sub ls
 
+[%%if os_type <> "win32"]
 let read_char () =
   let termio = Unix.tcgetattr Unix.stdin in
   let () =
@@ -48,6 +49,10 @@ let read_char () =
   let res = input_char stdin_channel in
   Unix.tcsetattr Unix.stdin Unix.TCSADRAIN termio;
   res
+[%%else]
+let read_char () =
+  input_char stdin
+[%%endif]
 
 let rec print_sub_list (sub': substitution) (ls': solution_set) =
   print_sub @@ IntMap.to_list sub'; print_flush();

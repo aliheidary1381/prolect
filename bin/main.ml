@@ -4,11 +4,11 @@
 
 open Format
 open String
-open Prolect.Support.Error
-open Prolect.Core
+open Libprolect.Support.Error
+open Libprolect.Core
 
-module Parser = Prolect.Parser
-module Lexer = Prolect.Lexer
+module Parser = Libprolect.Parser
+module Lexer = Libprolect.Lexer
 
 (* let _ = Printexc.record_backtrace true *)
 
@@ -37,15 +37,45 @@ let parseFile (inFile: string) =
 in
   Parsing.clear_parser(); close_in pi; result
 
-let rec read_til_dot ?(prompt = "?- ") () = 
-  let line =
-    match LNoise.linenoise prompt with
+[%%if os_type <> "Win32"]
+let read_line prompt =
+  match LNoise.linenoise prompt with
       None -> ""
-    | Some l -> l in
+    | Some l -> l
+[%%else]
+let read_line prompt =
+  print_string prompt;
+  print_flush();
+  read_line()
+[%%endif]
+
+let rec read_til_dot ?(prompt = "?- ") () = 
+  let line = read_line prompt in
   if contains line '.' then
     line
   else
     line ^ " " ^ (read_til_dot ~prompt: "|    " ())
+
+[%%if os_type <> "Win32"]
+let get_user_input() =
+  let text = read_til_dot() in
+  LNoise.history_add text |> ignore;
+  LNoise.history_save ~filename:"history.txt" |> ignore;
+  text
+[%%else]
+let get_user_input() =
+  read_til_dot()
+[%%endif]
+
+[%%if os_type <> "Win32"]
+let prep() = 
+  LNoise.set_multiline true;
+  LNoise.history_load ~filename:"history.txt" |> ignore;
+  LNoise.history_set ~max_length:100 |> ignore
+[%%else]
+let prep() = 
+  print_endline "Support on windows is limited. sorry";
+[%%endif]
 
 let parseString (str: string) =
   let lexbuf = Lexer.createFromStr str
@@ -65,17 +95,14 @@ let process_file (f: string)  =
 
 let rec toplevel () =
   try (
-    let text = read_til_dot() in
-    LNoise.history_add text |> ignore;
-    LNoise.history_save ~filename:"history.txt" |> ignore;
+    let text = get_user_input() in
     let q = parseString ("?- " ^ text) in
     open_hvbox 0;
     process_query q;
     force_newline();
     print_flush();
-      toplevel ()
+    toplevel()
   ) with Stdlib.Sys.Break -> 0
-
 
 let main () = 
   let inFiles = ref ([] : string list) in
@@ -84,11 +111,9 @@ let main () =
 Usage: prolect files...|};
   List.iter process_file !inFiles;
   print_endline "Welcome to Prolect (version 1.1.2)";
+  prep();
   print_endline "";
-  LNoise.set_multiline true;
-  LNoise.history_load ~filename:"history.txt" |> ignore;
-  LNoise.history_set ~max_length:100 |> ignore;
-  toplevel ()
+  toplevel()
 
 let () = set_max_boxes 1000
 let () = set_margin 67

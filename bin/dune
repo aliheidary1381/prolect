@@ -1,5 +1,17 @@
 (executable
  (public_name prolect)
  (name main)
- (libraries prolect linenoise)
- (modes byte exe))
+ (enabled_if (<> %{os_type} "Win32"))
+ (preprocess (pps ppx_optcomp))
+ (libraries libprolect linenoise)
+ (modes byte exe)
+)
+
+(executable
+ (public_name prolect)
+ (name main)
+ (enabled_if (= %{os_type} "Win32"))
+ (preprocess (pps ppx_optcomp))
+ (libraries libprolect)
+ (modes byte exe)
+)

@@ -1,5 +1,13 @@
 (library
- (name prolect)
+ (name libprolect)
+ (enabled_if (<> %{os_type} "Win32"))
+ (preprocess (pps ppx_optcomp))
  (libraries unix))
+
+(library
+ (name libprolect)
+ (enabled_if (= %{os_type} "Win32"))
+ (preprocess (pps ppx_optcomp)))
+
 (ocamllex lexer)
 (ocamlyacc parser)
