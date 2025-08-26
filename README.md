@@ -73,7 +73,7 @@ Provided that you've given the test consulting file
 (i.e. running `prolect test.pl` instead of `prolect`):
 
 ```prolog
-Welcome to Prolect (version 1.1.2)
+Welcome to Prolect (version 1.1.3)
 
 ?- ancestor(terah, jacob).
 true .

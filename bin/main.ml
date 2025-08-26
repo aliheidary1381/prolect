@@ -107,10 +107,10 @@ let rec toplevel () =
 let main () = 
   let inFiles = ref ([] : string list) in
   Arg.parse argDefs (fun s -> inFiles := s::!inFiles) 
-{|prolect (Prolect) 1.1.2
+{|prolect (Prolect) 1.1.3
 Usage: prolect files...|};
   List.iter process_file !inFiles;
-  print_endline "Welcome to Prolect (version 1.1.2)";
+  print_endline "Welcome to Prolect (version 1.1.3)";
   prep();
   print_endline "";
   toplevel()
