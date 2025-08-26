@@ -14,7 +14,7 @@
  (description
 "A pretty basic interpreter for prolog with no support for 
 integers, lists or anything other than pure logic")
- (depends ocaml dune (linenoise (<> :os "win32")) ppx_optcomp)
+ (depends (ocaml (>= 5.1)) dune (linenoise (<> :os "win32")) ppx_optcomp)
  ; %{os_type} is a dune var, :os is an opam var
  (tags
   (prolog interpreter)))
